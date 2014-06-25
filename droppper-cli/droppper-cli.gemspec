@@ -1,8 +1,8 @@
 # coding: utf-8
-version = File.read(File.expand_path('../DROPPER_VERSION', __FILE__)).strip
+version = File.read(File.expand_path('../../DROPPER_VERSION', __FILE__)).strip
 
 Gem::Specification.new do |spec|
-  spec.name          = "droppper"
+  spec.name          = "droppper-cli"
   spec.version       = version
   spec.authors       = ["Cristian Bica"]
   spec.email         = ["cristian.bica@gmail.com"]
@@ -12,11 +12,10 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   spec.files         = Dir['README.md', 'LICENSE.txt', 'lib/**/*']
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "droppper-core", version
-  spec.add_dependency "droppper-cli", version
-  spec.add_dependency "droppper-console", version
+  spec.add_dependency "droppper-cmd", version
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
