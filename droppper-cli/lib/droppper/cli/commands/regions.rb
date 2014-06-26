@@ -15,6 +15,6 @@ command :regions do |c|
         "sizes"     => region.sizes.join(", "),
       }
     end
-    Formatador.display_table(data, options[:full] ? %w(name slug available features sizes) : %w(name slug available))
+    Formatador.display_compact_table(data, options[:full] ? %w(name slug available features sizes) : %w(name slug available))
   end
 end

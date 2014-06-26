@@ -3,6 +3,8 @@ require 'droppper/account'
 
 desc "Manage your DigitalOcean accounts"
 command :accounts do |c|
+  c.default_command :list
+
   c.desc "List saved account on your system"
   c.command :list do |list|
     list.action do |global,options,args|
@@ -13,7 +15,7 @@ command :accounts do |c|
         Droppper::Cmd::Config.instance.accounts.each do |_, account|
           data << {identifier: account.identifier, token: account.token, default: "#{'YES' if Droppper::Cmd::Config.instance.default_account==account}"}
         end
-        Formatador.display_table data
+        Formatador.display_compact_table data
       end
     end
   end

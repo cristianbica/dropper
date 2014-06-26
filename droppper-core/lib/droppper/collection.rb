@@ -2,6 +2,7 @@ module Droppper
   class Collection < Array
     attr_accessor :model
     attr_accessor :meta
+    attr_accessor :links
     attr_accessor :per_page
 
     def initialize(options = {})
@@ -9,19 +10,27 @@ module Droppper
       self.per_page = options[:per_page] || 10
     end
 
-    def load_next(params={})
+    def fetch(params={})
       url    = next_page_url(params)
       result = Droppper.client.get(url)
       process_result(result)
       self
     end
 
+    def has_more_records?
+      meta and meta["total"].to_i > self.size
+    end
+
+    def total_records
+      (meta and meta["total"]) ? meta["total"].to_i : self.size
+    end
+
     protected
       def next_page_url(params)
-        if meta and meta["links"] and meta["links"]["pages"] and meta["links"]["pages"]["next"]
-          meta["links"]["pages"]["next"]
+        if links and links["pages"] and links["pages"]["next"]
+          links["pages"]["next"]
         else
-          model.collection_url + URI.encode_www_form(params)
+          model.collection_url + "?" + URI.encode_www_form(params.merge(per_page: self.per_page))
         end
       end
 
@@ -32,7 +41,8 @@ module Droppper
             self << model.new(record)
           end
         end
-        self.meta = result["meta"]
+        self.meta  = result["meta"]
+        self.links = result["links"]
       end
 
   end

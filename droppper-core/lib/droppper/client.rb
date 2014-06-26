@@ -26,10 +26,12 @@ module Droppper
     end
 
     def get(url)
+      # puts "{self.class.name}#GET #{url}"
       @connection[url].get accept: :json
     end
 
     def post(url, params = {})
+      # puts "{self.class.name}#POST #{url} with: #{params.inspect}"
       r = @connection[url].post params.to_json, {accept: :json, content_type: :json}
     rescue Exception => e
       puts "#{e.inspect}"
@@ -37,14 +39,15 @@ module Droppper
     end
 
     def put(url, params = {})
-      @connection[url].put params, {accept: :json}
-    end
-
-    def patch(url, params = {})
-      @connection[url].patch params, {accept: :json}
+      # puts "{self.class.name}#PUT #{url} with: #{params.inspect}"
+      @connection[url].put params.to_json, {accept: :json, content_type: :json}
+    rescue Exception => e
+      puts "#{e.inspect}"
+      exit!
     end
 
     def delete(url)
+      # puts "{self.class.name}#DELETE #{url}"
       @connection[url].delete accept: :json
     rescue Exception => e
       puts "#{e.inspect}"

@@ -5,5 +5,7 @@ require "droppper/resource"
 require "droppper/ssh_key"
 require "droppper/region"
 require "droppper/size"
+require "droppper/image"
+require "droppper/action"
 
 require "droppper/droplet"

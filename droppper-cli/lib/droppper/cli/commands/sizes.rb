@@ -17,6 +17,6 @@ command :sizes do |c|
       row
     end
 
-    Formatador.display_table(data, options[:full] ? %w(slug memory vcpus disk transfer price_monthly) : %w(slug memory vcpus disk transfer price_monthly price_hourly regions))
+    Formatador.display_compact_table(data, options[:full] ? %w(slug memory vcpus disk transfer price_monthly) : %w(slug memory vcpus disk transfer price_monthly price_hourly regions))
   end
 end
