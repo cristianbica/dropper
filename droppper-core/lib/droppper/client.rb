@@ -1,4 +1,6 @@
 require 'rest-client'
+require 'redis'
+require 'redis-namespace'
 
 module Droppper
 
@@ -26,12 +28,18 @@ module Droppper
     end
 
     def get(url)
-      # puts "{self.class.name}#GET #{url}"
-      @connection[url].get accept: :json
+      $redis ||= Redis::Namespace.new redis: Redis.new, namespace: "droppper-http-cache"
+      debug "{self.class.name}#GET #{url}"
+      key = Digest::MD5.hexdigest(url)
+      unless $redis[key]
+        $redis[key] = @connection[url].get accept: :json
+        $redis.expire key, 600
+      end
+      $redis[key]
     end
 
     def post(url, params = {})
-      # puts "{self.class.name}#POST #{url} with: #{params.inspect}"
+      debug "{self.class.name}#POST #{url} with: #{params.inspect}"
       r = @connection[url].post params.to_json, {accept: :json, content_type: :json}
     rescue Exception => e
       puts "#{e.inspect}"
@@ -39,7 +47,7 @@ module Droppper
     end
 
     def put(url, params = {})
-      # puts "{self.class.name}#PUT #{url} with: #{params.inspect}"
+      debug "{self.class.name}#PUT #{url} with: #{params.inspect}"
       @connection[url].put params.to_json, {accept: :json, content_type: :json}
     rescue Exception => e
       puts "#{e.inspect}"
@@ -47,12 +55,17 @@ module Droppper
     end
 
     def delete(url)
-      # puts "{self.class.name}#DELETE #{url}"
+      debug "{self.class.name}#DELETE #{url}"
       @connection[url].delete accept: :json
     rescue Exception => e
       puts "#{e.inspect}"
       exit!
     end
+
+    protected
+      def debug(msg)
+        #puts msg
+      end
 
   end
 end

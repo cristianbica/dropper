@@ -13,7 +13,6 @@ module Droppper
       response = Droppper::client.post "#{resource_url}/actions", {type: "transfer", region: region_slug}
       raise "Cannot perform this action" if response.size==0
       action = Droppper::Action.new_from_response response
-      action.resource_url = "#{resource_url}/actions/#{action.id}"
       action
     end
   end

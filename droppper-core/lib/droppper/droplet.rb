@@ -1,11 +1,10 @@
 module Droppper
-  class Account
-    attr_accessor :identifier
-    attr_accessor :token
+  class Droplet < Resource
+    @collection_url   = "/v2/droplets"
+    @collection_name  = "droplets"
+    @resource_url     = "/v2/droplets/%{id}"
+    @resource_name    = "droplet"
 
-    def initialize(identifier, token)
-      @identifier = identifier
-      @token      = token
-    end
+    attr_accessor :id, :name, :region, :image, :size, :locked, :status, :networks, :kernel, :backup_ids, :snapshot_ids, :action_ids
   end
 end

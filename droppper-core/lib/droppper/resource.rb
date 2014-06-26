@@ -40,7 +40,7 @@ module Droppper
       end
     end
 
-    attr_accessor :attributes, :resource_url
+    attr_accessor :attributes
 
     def initialize(attributes={})
       self.attributes = attributes
