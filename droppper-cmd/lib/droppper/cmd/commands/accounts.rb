@@ -9,10 +9,11 @@ command :accounts do |c|
       if Droppper::Cmd::Config.instance.accounts.size==0
         puts "There are no accounts configured"
       else
-        puts "Your DigitalOcean accounts:"
+        data = []
         Droppper::Cmd::Config.instance.accounts.each do |_, account|
-          puts "#{account.identifier} #{' (default)' if Droppper::Cmd::Config.instance.default_account==account}"
+          data << {identifier: account.identifier, token: account.token, default: "#{'YES' if Droppper::Cmd::Config.instance.default_account==account}"}
         end
+        Formatador.display_table data
       end
     end
   end
