@@ -4,11 +4,10 @@ require 'gli'
 include GLI::App
 
 program_desc 'Dropper is a management solution for your DigitalOcean cloud'
+sort_help :manually
 
-desc 'DigitalOcean account'
-default_value 'default'
-arg_name 'account'
-flag [:a,:account]
+flag [:a,:account], desc: "DigitalOcean account", default_value: "default", arg_name: "account"
+switch [:i, :interactive], desc: "Run in interactive mode and Droppper will ask you for the parameters", default: false
 
 %w(droppper-cmd droppper-cli droppper-console).each do |gem_name|
   begin

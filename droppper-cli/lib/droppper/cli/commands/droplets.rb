@@ -51,5 +51,19 @@ command :droplets do |c|
     end
   end
 
+  c.desc "Create a droplet"
+  c.command :create do |create|
+    create.flag :name, desc: "Hostname"
+    create.flag :region, desc: "Region slug"
+    create.flag :size, desc: "Droplet size slug"
+    create.flag :image, desc: "Image ID or slug"
+    create.flag :ssh_keys, desc: "Comma separated SSH keys IDs or names or fingerprint. Pass 'all' to enable all SSH keys", default: "all"
+    create.switch :backups, default: true, desc: "Enable backups"
+    create.switch :ipv6, default: true, desc: "Enable IPv6"
+    create.switch :private_networking, default: true, desc: "Enable private networking"
+
+    create.action do |global,options,args|
+    end
+  end
 
 end

@@ -1,4 +1,5 @@
 require 'droppper/cmd/config'
+require 'droppper/cmd/interactive'
 require 'droppper-core'
 require 'formatador'
 
@@ -15,22 +16,24 @@ command :keys do |c|
   end
 
   c.desc "Adds a new SSH key"
-  c.arg "name"
-  c.arg "public_key"
   c.command [:add] do |add|
+    add.flag :name, desc: "SSH key name", arg_name: "name", default_value: "", type: String
+    add.flag :public_key, desc: "SSH public key", arg_name: "public_key", default_value: "", type: String
     add.action do |global_options,options,args|
-      raise "You must provide a key name and a public_key" unless args.size==2
-      key = Droppper::SshKey.create(name: args[0], public_key: args[1])
+      Droppper::Cmd::Interactive.new(add, options, args).run if global_options[:interactive]
+      raise "You must provide a key name and a public_key" unless options[:name].to_s.size>0 and options[:public_key].to_s.size>0
+      key = Droppper::SshKey.create(name: options[:name], public_key: options[:public_key])
       puts "SSH key <#{key.name}> created"
     end
   end
 
   c.desc "Removes a SSH key"
-  c.arg "key_id"
-  c.command :remove do |add|
-    add.action do |global_options,options,args|
-      raise "You must provide a SSH key ID" unless args.size==1
-      Droppper::SshKey.destroy(args[0])
+  c.command :remove do |remove|
+    remove.flag :id, desc: "SSH key ID", arg_name: "key_id", default_value: "", type: String
+    remove.action do |global_options,options,args|
+      Droppper::Cmd::Interactive.new(remove, options, args).run if global_options[:interactive]
+      raise "You must provide a SSH key ID" unless options[:id].to_s.size>0
+      Droppper::SshKey.destroy(options[:id])
       puts "SSH key removed"
     end
   end
