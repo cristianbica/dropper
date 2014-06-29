@@ -18,7 +18,7 @@ command :actions do |c|
   c.arg "action_id"
   c.command :monitor do |add|
     add.action do |global_options,options,args|
-      raise "You must provide an action_id" unless args.size>0
+      help_now! "You must provide an action_id" unless args.size>0
       action = Droppper::Action.find(args[0])
       puts "Beging monitoring action #{action.id} ..."
       while action.status=="in-progress" do

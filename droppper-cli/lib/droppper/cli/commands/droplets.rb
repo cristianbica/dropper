@@ -24,7 +24,7 @@ command :droplets do |c|
   c.arg "droplet_id"
   c.command :show do |show|
     show.action do |global,options,args|
-      raise "You must provide a SSH key ID" unless args.size==1
+      help_now! "You must provide a SSH key ID" unless args.size==1
       droplet = Droppper::Droplet.find(args[0])
       puts %Q(
         Name: #{droplet.name}

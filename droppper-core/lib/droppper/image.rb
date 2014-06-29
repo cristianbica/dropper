@@ -11,7 +11,7 @@ module Droppper
       resource_url = self.class.resource_url%symbolized_attributes
       puts "Posting #{{type: "transfer", region: region_slug}.inspect} to #{resource_url}/actions"
       response = Droppper::client.post "#{resource_url}/actions", {type: "transfer", region: region_slug}
-      raise "Cannot perform this action" if response.size==0
+      help_now! "Cannot perform this action" if response.size==0
       action = Droppper::Action.new_from_response response
       action
     end

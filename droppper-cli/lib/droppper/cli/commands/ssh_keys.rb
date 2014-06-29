@@ -21,7 +21,7 @@ command :keys do |c|
     add.flag :public_key, desc: "SSH public key", arg_name: "public_key", default_value: "", type: String
     add.action do |global_options,options,args|
       Droppper::Cmd::Interactive.new(add, options, args).run if global_options[:interactive]
-      raise "You must provide a key name and a public_key" unless options[:name].to_s.size>0 and options[:public_key].to_s.size>0
+      help_now! "You must provide a key name and a public_key" unless options[:name].to_s.size>0 and options[:public_key].to_s.size>0
       key = Droppper::SshKey.create(name: options[:name], public_key: options[:public_key])
       puts "SSH key <#{key.name}> created"
     end
@@ -32,7 +32,7 @@ command :keys do |c|
     remove.flag :id, desc: "SSH key ID", arg_name: "key_id", default_value: "", type: String
     remove.action do |global_options,options,args|
       Droppper::Cmd::Interactive.new(remove, options, args).run if global_options[:interactive]
-      raise "You must provide a SSH key ID" unless options[:id].to_s.size>0
+      help_now! "You must provide a SSH key ID" unless options[:id].to_s.size>0
       Droppper::SshKey.destroy(options[:id])
       puts "SSH key removed"
     end

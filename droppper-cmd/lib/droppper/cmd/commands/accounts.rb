@@ -6,8 +6,8 @@ command :accounts do |c|
   c.default_command :list
 
   c.desc "List saved account on your system"
-  c.command :list do |list|
-    list.action do |global,options,args|
+  c.command :list do |cmd|
+    cmd.action do |global,options,args|
       if Droppper::Cmd::Config.instance.accounts.size==0
         puts "There are no accounts configured"
       else
@@ -21,41 +21,46 @@ command :accounts do |c|
   end
 
   c.desc "Adds a new accounts"
-  c.arg "account_name"
-  c.arg "account_token"
-  c.command [:add] do |add|
-    add.switch :default
-    add.action do |global_options,options,args|
-      raise "You must provide an account name and a token" unless args.size==2
-      raise "You cannot add an account named default" if args.first=="default"
-      account = Droppper::Account.new(*args)
+  c.command [:add] do |cmd|
+    cmd.switch :default, desc: "Make this new account the default one"
+    cmd.flag :name, desc: "Account name", arg_name: "name", default_value: "", type: String
+    cmd.flag :token, desc: "Account API v2 token", arg_name: "token", default_value: "", type: String
+    cmd.action do |global_options,options,args|
+      Droppper::Cmd::Interactive.new(cmd, options, args).run if global_options[:interactive]
+      help_now! "You must provide an account name and a token" unless options[:name].to_s.size>0 and options[:token].to_s.size>0
+      help_now! "You cannot add an account named default" if options[:name]=="default"
+      puts options.inspect
+      account = Droppper::Account.new(options[:name], options[:token])
+      puts account.inspect
       Droppper::Cmd::Config.instance.add_account(account)
       Droppper::Cmd::Config.instance.default_account = account if options[:default]==true
       Droppper::Cmd::Config.instance.save_config
-      puts "Account <#{args.first}> added"
+      puts "Account <#{account.identifier}> added"
     end
   end
 
   c.desc "Removes an account"
-  c.arg "account_name"
-  c.command :remove do |add|
-    add.action do |global_options,options,args|
-      raise "You must provide an account name" unless args.size==1
-      Droppper::Cmd::Config.instance.remove_account(args.first)
+  c.command :remove do |cmd|
+    cmd.flag :name, desc: "Account name", arg_name: "account_name", default_value: "", type: String
+    cmd.action do |global_options,options,args|
+      Droppper::Cmd::Interactive.new(cmd, options, args).run if global_options[:interactive]
+      help_now! "You must provide an account name" unless options[:name].to_s.size>0
+      Droppper::Cmd::Config.instance.remove_account(options[:name])
       Droppper::Cmd::Config.instance.save_config
-      puts "Account <#{args.first}> removed"
+      puts "Account <#{options[:name]}> removed"
     end
   end
 
   c.desc "Makes an account default"
-  c.arg "account_name"
-  c.command :default do |add|
-    add.action do |global_options,options,args|
-      raise "You must provide an account name" unless args.size==1
-      account = Droppper::Cmd::Config.instance.accounts[args.first]
+  c.command :default do |cmd|
+    cmd.flag :name, desc: "Account name", arg_name: "account_name", default_value: "", type: String
+    cmd.action do |global_options,options,args|
+      Droppper::Cmd::Interactive.new(cmd, options, args).run if global_options[:interactive]
+      help_now! "You must provide an account name" unless options[:name].to_s.size>0
+      account = Droppper::Cmd::Config.instance.accounts[options[:name]]
       Droppper::Cmd::Config.instance.default_account = account
       Droppper::Cmd::Config.instance.save_config
-      puts "Account <#{args.first}> marked as default"
+      puts "Account <#{account.identifier}> marked as default"
     end
   end
 end
