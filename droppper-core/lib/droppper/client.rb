@@ -60,7 +60,7 @@ module Droppper
 
     protected
       def debug(msg)
-        puts msg
+        #puts msg
       end
 
   end

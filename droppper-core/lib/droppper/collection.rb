@@ -35,7 +35,7 @@ module Droppper
       end
 
       def process_result(result)
-        puts "Processing result: #{result.inspect}"
+        #puts "Processing result: #{result.inspect}"
         result = JSON.parse(result)
         if result[model.collection_name] and result[model.collection_name].is_a?(Array)
           result[model.collection_name].each do |record|

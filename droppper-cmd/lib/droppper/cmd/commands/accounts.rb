@@ -31,7 +31,6 @@ command :accounts do |c|
       help_now! "You cannot add an account named default" if options[:name]=="default"
       puts options.inspect
       account = Droppper::Account.new(options[:name], options[:token])
-      puts account.inspect
       Droppper::Cmd::Config.instance.add_account(account)
       Droppper::Cmd::Config.instance.default_account = account if options[:default]==true
       Droppper::Cmd::Config.instance.save_config
