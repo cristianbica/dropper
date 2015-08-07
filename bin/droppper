@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+Signal.trap("INT") { exit 1 }
+
+require 'gli'
+require 'droppper'
+
+include GLI::App
+
+subcommand_option_handling :normal
+
+program_desc 'Droppper is a CLI for your DigitalOcean cloud'
+sort_help :manually
+
+flag [:token], desc: "DigitalOcean Token", arg_name: "token", optional: true
+
+# This gem commands
+commands = Dir[File.join(File.expand_path("../../lib", __FILE__), "**", "commands", "*.rb")]
+
+# Commands from other gems
+Gem::Specification.latest_specs.select{|g| g.name =~ /droppper-/ }.each do |g|
+  begin
+    g.full_require_paths.each do |path|
+      Dir[File.join(path, "**", "commands", "*.rb")].each do |commands_files|
+        commands += commands_files
+      end
+    end
+  rescue
+  end
+end
+
+commands.each do |file|
+  require file
+end
+
+
+pre do |global,command,options,args|
+  token  = global[:token] || Droppper::Utils.find_token
+  help_now! "You must provide a DigitalOcean API v2 token. You can specify it in the command line or write it in a .droppper file. When running droppper it will try to use the 'nearest' .droppper file (in current dir or parent dir and so on; it defaults to ~/.droppper) " unless token
+  Droppper.client = DropletKit::Client.new(access_token: token)
+  true
+end
+
+post do |global,command,options,args|
+end
+
+on_error do |exception|
+  true
+end
+
+exit run(ARGV)
