@@ -1,48 +1,32 @@
-desc "Manage your DigitalOcean droplets"
-command :droplets do |c|
-  c.default_command :list
+require 'thor'
 
-  c.desc "List droplets"
-  c.arg "search_string"
-  c.command :list do |list|
-    list.action do |global,options,args|
-      data = Droppper.droplets(args)
-      if data.size == 0
-        puts "No droplets found"
-      else
-        tp data, {id: {display_name: "ID"}},
-                 {name: {display_name: "NAME"}},
-                 {"region.slug" => {display_name: "REGION"}},
-                 {"size_slug" => {display_name: "SIZE"}},
-                 :status,
-                 :locked
+module Droppper
+  module Commands
+    class Droplets < Thor
+      default_command :list
+
+      desc "list [SEARCH_STRING_OR_DROPLET_ID]", "Retrieve a list of your droplets"
+      def list(*args)
+        Droppper::Droplets.list(*args)
+      end
+
+      desc "show [SEARCH_STRING_OR_DROPLET_ID]", "Show full details about a droplet"
+      def show(*args)
+        Droppper::Droplets.show(*args)
+      end
+
+      desc "ssh [SEARCH_STRING_OR_DROPLET_ID]", "Starts a SSH to a droplet"
+      method_option "user",
+                    :type => :string,
+                    :aliases => "-u",
+                    :desc => "Specifies which user to log in as (default from .droppper files or root)"
+      method_option "port",
+                    :type => :string,
+                    :aliases => "-p",
+                    :desc => "Specifies which post to use for the ssh connection (default from .droppper files or 22)"
+      def ssh(*args)
+        Droppper::Droplets.ssh(*args, options)
       end
     end
   end
-
-  c.desc "Show a droplet details"
-  c.arg "droplet_id_or_search_string"
-  c.command :show do |show|
-    show.action do |global,options,args|
-      droplet = Droppper.droplet(args)
-      puts Droppper::Utils.print_hash droplet.as_json
-      puts ""
-    end
-  end
-
-  # c.desc "Create a droplet"
-  # c.command :create do |create|
-  #   create.flag :name, desc: "Hostname"
-  #   create.flag :region, desc: "Region slug"
-  #   create.flag :size, desc: "Droplet size slug"
-  #   create.flag :image, desc: "Image ID or slug"
-  #   create.flag :ssh_keys, desc: "Comma separated SSH keys IDs or names or fingerprint. Pass 'all' to enable all SSH keys", default: "all"
-  #   create.switch :backups, default: true, desc: "Enable backups"
-  #   create.switch :ipv6, default: true, desc: "Enable IPv6"
-  #   create.switch :private_networking, default: true, desc: "Enable private networking"
-
-  #   create.action do |global,options,args|
-  #   end
-  # end
-
 end

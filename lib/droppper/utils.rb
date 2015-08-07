@@ -1,26 +1,5 @@
 module Droppper
   module Utils extend self
-    def find_token
-      f = find_dot_dropper_file
-      File.open(f).read.strip if f
-    end
-
-    def find_dot_dropper_file
-      find_nearest_dot_dropper_file || default_drop_droppper_file
-    end
-
-    def find_nearest_dot_dropper_file(root=Dir.pwd)
-      f = File.expand_path ".droppper", root
-      return f if File.exists?(f)
-      return nil if root=='/'
-      find_nearest_dot_dropper_file(File.expand_path("..", root))
-    end
-
-    def default_drop_droppper_file
-      f = File.join(File.expand_path("~"), ".droppper")
-      return f if File.exists?(f)
-    end
-
     def print_hash(hash, include_empty=false)
       lines = []
       recursive_flatten_hash(hash).each do |key, value|
