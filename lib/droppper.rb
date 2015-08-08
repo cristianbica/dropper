@@ -5,6 +5,10 @@ require 'droplet_kit'
 require 'hashie/mash'
 require 'droppper/commands/droplets'
 require 'droppper/droplets'
+require 'droppper/commands/regions'
+require 'droppper/regions'
+require 'droppper/commands/sizes'
+require 'droppper/sizes'
 require 'droppper/cli'
 require 'highline/import'
 require 'table_print'
@@ -20,3 +24,5 @@ module Droppper
     end
   end
 end
+
+TablePrint::Config.max_width = 100

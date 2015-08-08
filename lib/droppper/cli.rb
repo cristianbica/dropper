@@ -35,5 +35,11 @@ module Droppper
     def ssh(*args)
       Droppper::Droplets.ssh(*args, options)
     end
+
+    desc "regions", "List regions"
+    subcommand "regions", Droppper::Commands::Regions
+
+    desc "sizes", "List sizes"
+    subcommand "sizes", Droppper::Commands::Sizes
   end
 end
