@@ -9,6 +9,10 @@ require 'droppper/commands/regions'
 require 'droppper/regions'
 require 'droppper/commands/sizes'
 require 'droppper/sizes'
+require 'droppper/commands/images'
+require 'droppper/images'
+require 'droppper/commands/actions'
+require 'droppper/actions'
 require 'droppper/cli'
 require 'highline/import'
 require 'table_print'
@@ -21,6 +25,12 @@ module Droppper
       self.config = Droppper::Config.new
       self.config.token = options["token"] if options["token"]
       self.client = DropletKit::Client.new(access_token: config.token)
+      # def client.connection
+      #   @connection ||= Faraday.new(connection_options) do |req|
+      #     req.adapter :net_http
+      #     req.response :logger
+      #   end
+      # end
     end
   end
 end

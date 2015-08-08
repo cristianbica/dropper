@@ -41,5 +41,11 @@ module Droppper
 
     desc "sizes", "List sizes"
     subcommand "sizes", Droppper::Commands::Sizes
+
+    desc "images", "Images manipulation"
+    subcommand "images", Droppper::Commands::Images
+
+    desc "actions", "Actions querying"
+    subcommand "actions", Droppper::Commands::Actions
   end
 end
