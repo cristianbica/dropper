@@ -1,12 +1,13 @@
 require 'time'
 
-module Droppper
+module Dropper
   module Droplets extend self
 
     def list(*args)
       data = droplets(*args)
       tp data, {id: {display_name: "ID"}},
                {name: {display_name: "NAME"}},
+               {public_ip: {display_name: "PUBLIC IP"}},
                {"region.slug" => {display_name: "REGION"}},
                {"size_slug" => {display_name: "SIZE"}},
                :status,
@@ -45,10 +46,10 @@ Kernel: #{d.kernel.name}
           "-o", "LogLevel=ERROR",
           "-o", "StrictHostKeyChecking=no",
           "-o", "UserKnownHostsFile=/dev/null",
-          "-i", File.expand_path(Droppper.config.ssh.keyfile)
+          "-i", File.expand_path(Dropper.config.ssh.keyfile)
       ]
-      cmd_options.push "-l", "#{options['user']||Droppper.config.ssh.user}"
-      cmd_options.push "-p", "#{options['port']||Droppper.config.ssh.port}"
+      cmd_options.push "-l", "#{options['user']||Dropper.config.ssh.user}"
+      cmd_options.push "-p", "#{options['port']||Dropper.config.ssh.port}"
       cmd_options << d.public_ip
       puts "Executing: ssh #{cmd_options.join(" ")}"
       Kernel.exec("ssh", *cmd_options)
@@ -56,7 +57,7 @@ Kernel: #{d.kernel.name}
 
     def droplets(*args)
       args = Array(args).flatten
-      data = Droppper.client.droplets.all.to_a
+      data = Dropper.client.droplets.all.to_a
       if args.size > 0
         data = data.select do |d|
           (args.size==1 and (d.id.to_s == args[0] or d.name == args[0])) or (d.name =~ Regexp.new(args.join(".*")))

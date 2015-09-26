@@ -1,6 +1,6 @@
 require 'time'
 
-module Droppper
+module Dropper
   module Images extend self
     def list(*args, options)
       data = images(args, options)
@@ -12,7 +12,7 @@ module Droppper
       img = image(args)
       return unless img
       img.name = new_name
-      r = Droppper.client.images.update img, id: img.id
+      r = Dropper.client.images.update img, id: img.id
       if r.respond_to?(:name) and r.name == new_name
         puts "Image has been successfully renamed."
       else
@@ -23,7 +23,7 @@ module Droppper
     def destroy(*args)
       img = image(args)
       return unless img
-      r = Droppper.client.images.delete id: img.id
+      r = Dropper.client.images.delete id: img.id
       if r.to_s == 'true'
         puts "Image has been successfully destroyed"
       else
@@ -34,9 +34,9 @@ module Droppper
     def transfer(new_region, *args)
       img = image(args)
       return unless img
-      r = Droppper.client.image_actions.transfer(image_id: img.id, region: new_region)
+      r = Dropper.client.image_actions.transfer(image_id: img.id, region: new_region)
       if r and r.is_a?(DropletKit::ImageAction)
-        puts "Image transfer has begin. You can see the progress by running: droppper images monitor_action #{img.id} #{r.id}"
+        puts "Image transfer has begin. You can see the progress by running: dropper images monitor_action #{img.id} #{r.id}"
       else
         puts "Failed to transfer image: Response: #{r}"
       end
@@ -45,9 +45,9 @@ module Droppper
     def convert(*args)
       img = image(args)
       return unless img
-      r = Droppper.client.image_actions.convert(image_id: img.id)
+      r = Dropper.client.image_actions.convert(image_id: img.id)
       if r and r.is_a?(DropletKit::ImageAction)
-        puts "Image conversion has begin. You can see the progress by running: droppper images monitor_action #{img.id} #{r.id}"
+        puts "Image conversion has begin. You can see the progress by running: dropper images monitor_action #{img.id} #{r.id}"
       else
         puts "Failed to convert image: Response: #{r}"
       end
@@ -56,7 +56,7 @@ module Droppper
     def actions(image_id)
       require 'pry'
       binding.pry
-      r = Droppper.client.image_actions.all(image_id: image_id)
+      r = Dropper.client.image_actions.all(image_id: image_id)
       r.each
       data = r.collection
       if data.size==0
@@ -67,7 +67,7 @@ module Droppper
     end
 
     def show_action(image_id, action_id)
-      act = Droppper.client.image_actions.find(image_id: image_id, id: action_id)
+      act = Dropper.client.image_actions.find(image_id: image_id, id: action_id)
       puts act
     end
 
@@ -91,7 +91,7 @@ module Droppper
     end
 
     def images(args, options={})
-      data = Droppper.client.images.all(filters_for_type(options["type"])).to_a
+      data = Dropper.client.images.all(filters_for_type(options["type"])).to_a
       if args.size > 0
         re = Regexp.new(Array(args).join(".*"))
         data = data.select{|i| i.id.to_s=~re or i.name=~re or i.distribution=~re or i.slug=~re or i.type=~re or i.regions.join( )=~re}

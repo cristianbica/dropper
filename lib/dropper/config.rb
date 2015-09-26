@@ -1,4 +1,4 @@
-module Droppper
+module Dropper
   class Config
     attr_accessor :data, :files
 
@@ -22,7 +22,7 @@ module Droppper
     end
 
     def print
-      puts Droppper::Utils.print_hash(data)
+      puts Dropper::Utils.print_hash(data)
     end
 
     def token
@@ -51,9 +51,11 @@ module Droppper
         self.files = []
         root = Dir.pwd
         while root != '/'
+          add_file File.expand_path(".dropper", root)
           add_file File.expand_path(".droppper", root)
           root = File.expand_path("..", root)
         end
+        add_file File.join(File.expand_path("~"), ".dropper")
         add_file File.join(File.expand_path("~"), ".droppper")
       end
 

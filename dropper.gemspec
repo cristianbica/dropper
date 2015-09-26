@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'droppper/version'
+require 'dropper/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "droppper"
-  spec.version       = Droppper::VERSION
+  spec.name          = "dropper"
+  spec.version       = Dropper::VERSION
   spec.authors       = ["Cristian Bica"]
   spec.email         = ["cristian.bica@gmail.com"]
 
   spec.summary       = %q{DigitalOcean CLI.}
   spec.description   = %q{DigitalOcean CLI using DigitalOcean's API v2.}
-  spec.homepage      = "https://github.com/cristianbica/droppper"
+  spec.homepage      = "https://github.com/cristianbica/dropper"
 
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

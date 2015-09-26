@@ -1,4 +1,4 @@
-module Droppper
+module Dropper
   module Utils extend self
     def print_hash(hash, include_empty=false)
       lines = []

@@ -1,6 +1,6 @@
 require 'time'
 
-module Droppper
+module Dropper
   module Actions extend self
     def list(*args)
       data = actions(args)
@@ -13,7 +13,7 @@ module Droppper
     end
 
     def actions(args)
-      pr = Droppper.client.actions.all(page:1, per_page: 25)
+      pr = Dropper.client.actions.all(page:1, per_page: 25)
       pr.each
       data = pr.collection
       if args.size > 0
@@ -24,7 +24,7 @@ module Droppper
     end
 
     def action(action_id)
-      Droppper.client.actions.find id: action_id
+      Dropper.client.actions.find id: action_id
     end
   end
 end

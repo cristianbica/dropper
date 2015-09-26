@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'droppper'
+require 'dropper'
 Signal.trap("INT") { exit 1 }
-Droppper::CLI.start(ARGV)
+Dropper::CLI.start(ARGV)
